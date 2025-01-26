@@ -2,12 +2,22 @@ import { NextResponse } from 'next/server'
 import { hashedPass } from "@/utils/encryption";
 import {createUser, getUserByEmail} from "@/utils/user";
 import type { User } from "@/types/user";
+import {ApiResponse, ErrorType} from "@/types/response";
 
 export const POST = async (request: Request) => {
     const { email, password, fullname } = await request.json();
 
     if (!email || !password) {
-        return new NextResponse(JSON.stringify({ error: 'Email and password are required' }), {
+            const res: ApiResponse<null> = {
+                message: "An error occurred.",
+                data: null,
+                error: {
+                    type: ErrorType.MissingValueError,
+                    stack: "Email and password are required",
+                    message: "Email and password are required"
+                }
+            };
+            return new NextResponse(JSON.stringify(res, null, 2), {
             status: 400,
             headers: {
                 'content-type': 'application/json'
@@ -19,7 +29,16 @@ export const POST = async (request: Request) => {
         const existingUser = await getUserByEmail(email);
 
         if (existingUser) {
-            return new NextResponse(JSON.stringify({error: 'User already exists'}), {
+            const res: ApiResponse<null> = {
+                message: "An error occurred.",
+                data: null,
+                error: {
+                    type: ErrorType.DatabaseError,
+                    stack: "User already exists",
+                    message: "User already exists"
+                }
+            };
+            return new NextResponse(JSON.stringify(res, null, 2), {
                 status: 409,
                 headers: {
                     'content-type': 'application/json'
@@ -39,7 +58,16 @@ export const POST = async (request: Request) => {
         const createdUser = await createUser(newUser);
 
         if (!createdUser) {
-            return new NextResponse(JSON.stringify({error: 'Failed to create user'}), {
+            const res: ApiResponse<null> = {
+                message: "An error occurred.",
+                data: null,
+                error: {
+                    type: ErrorType.DatabaseError,
+                    stack: "Failed to create user",
+                    message: "Failed to create user"
+                }
+            };
+            return new NextResponse(JSON.stringify(res, null, 2), {
                 status: 500,
                 headers: {
                     'content-type': 'application/json'
@@ -47,14 +75,28 @@ export const POST = async (request: Request) => {
             });
         }
 
-        return new NextResponse(JSON.stringify(createdUser), {
+        const res: ApiResponse<User> = {
+            message: "User created successfully",
+            data: createdUser,
+            error: null
+        };
+        return new NextResponse(JSON.stringify(res, null, 2), {
             status: 201,
             headers: {
                 'content-type': 'application/json'
             }
         });
     } catch (e) {
-        return new NextResponse(JSON.stringify({error: e}), {
+        const res: ApiResponse<null> = {
+            message: "An error occurred.",
+            data: null,
+            error: {
+                type: ErrorType.DatabaseError,
+                stack: e,
+                message: JSON.stringify(e)
+            }
+        };
+        return new NextResponse(JSON.stringify(res, null, 2), {
             status: 500,
             headers: {
                 'content-type': 'application/json'
