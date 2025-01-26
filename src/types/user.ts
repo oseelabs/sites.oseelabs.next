@@ -1,9 +1,9 @@
-export type User = {
-    id?: string;
+
+export type NewUser = {
+    passHash: string;
     fullname: string;
     email: string;
-    passHash: string;
-};
+}
 
 export type UserResponse = {
     id: string;

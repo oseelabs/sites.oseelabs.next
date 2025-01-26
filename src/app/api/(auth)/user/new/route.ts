@@ -1,8 +1,31 @@
 import { NextResponse } from 'next/server'
 import { hashedPass } from "@/utils/encryption";
 import {createUser, getUserByEmail} from "@/utils/user";
-import type { User } from "@/types/user";
+import type {NewUser, UserResponse} from "@/types/user";
 import {ApiResponse, ErrorType} from "@/types/response";
+
+export const GET = async () => {
+    const data = {
+        Documentation: {
+            AccessMethod: 'POST',
+            ResponseData: {
+                message: "string",
+                data: "UserResponse | null",
+                error: {
+                    type: ErrorType,
+                    message: "string",
+                    stack: "unknown"
+                }
+            }
+        }
+    }
+    return new NextResponse(JSON.stringify(data, null, 2), {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+};
 
 export const POST = async (request: Request) => {
     const { email, password, fullname } = await request.json();
@@ -48,7 +71,7 @@ export const POST = async (request: Request) => {
 
         const passHash = await hashedPass(password);
 
-        const newUser: User = {
+        const newUser: NewUser = {
             email: email,
             fullname: fullname ?? '',
             passHash: passHash,
@@ -70,12 +93,12 @@ export const POST = async (request: Request) => {
             return new NextResponse(JSON.stringify(res, null, 2), {
                 status: 500,
                 headers: {
-                    'content-type': 'application/json'
+                    'Content-Type': 'application/json'
                 }
             });
         }
 
-        const res: ApiResponse<User> = {
+        const res: ApiResponse<UserResponse> = {
             message: "User created successfully",
             data: createdUser,
             error: null

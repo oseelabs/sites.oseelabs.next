@@ -1,8 +1,31 @@
 import {NextResponse} from "next/server";
 import {getUserByEmail} from "@/utils/user";
 import {comparePass} from "@/utils/encryption";
-import type {User} from "@/types/user";
+import type {UserResponse} from "@/types/user";
 import {ApiResponse, ErrorType} from "@/types/response";
+
+export const GET = async () => {
+    const data = {
+        Documentation: {
+            AccessMethod: 'POST',
+            ResponseData: {
+                message: "string",
+                data: "User | null",
+                error: {
+                    type: ErrorType,
+                    message: "string",
+                    stack: "unknown"
+                }
+            }
+        }
+    }
+    return new NextResponse(JSON.stringify(data, null, 2), {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+};
 
 export const POST = async (request: Request) => {
     const body = await request.json();
@@ -27,7 +50,8 @@ export const POST = async (request: Request) => {
             });
         }
 
-        const user: User|null = await getUserByEmail(email);
+        const user: UserResponse & { passHash: string } | null = await getUserByEmail(email);
+
         if (!user) {
             const res: ApiResponse<null> = {
                 message: "An error occurred.",
@@ -66,9 +90,13 @@ export const POST = async (request: Request) => {
             });
         }
 
-        const res: ApiResponse<User> = {
+        const res: ApiResponse<UserResponse> = {
             message: "User found successfully.",
-            data: user,
+            data: {
+                email: user.email,
+                fullname: user.fullname,
+                id: user.id,
+            },
             error: null
         };
 
