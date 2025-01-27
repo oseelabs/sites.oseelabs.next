@@ -11,7 +11,7 @@ const API_KEY: string = String(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 const genAi = new GoogleGenerativeAI(API_KEY);
 const gemini = genAi.getGenerativeModel({
     model: "gemini-2.0-flash-exp",
-    systemInstruction: 'You always reply in markdown string',
+    systemInstruction: 'You are a very helpful AI named Lueur',
     generationConfig: {
         maxOutputTokens: 2000,
         temperature: 0.7,
