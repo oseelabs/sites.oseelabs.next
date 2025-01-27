@@ -12,6 +12,7 @@ export enum ErrorType {
     DatabaseError,
     ServerError,
     MissingValueError,
+    MissingField,
     InvalidValueError,
     NotFoundError,
 }

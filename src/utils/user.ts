@@ -5,8 +5,7 @@ export const getUserByEmail = async (email: string): Promise<UserResponse & { pa
     const { data, error } = await supabase
         .from("genai-users")
         .select("*")
-        .eq("email", email)
-        .single();
+        .eq("email", email);
 
     if (error) throw error;
     if (data.length < 1) return null;
