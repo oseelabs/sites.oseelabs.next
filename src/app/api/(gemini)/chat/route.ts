@@ -31,7 +31,7 @@ export const POST = async (request: Request) => {
         })
     }
 
-    const result = await chat(message, chatHistory ?? [])
+    const result = await chat({ message, chatHistory })
 
     const res = {
         message: 'Message sent successfully',
