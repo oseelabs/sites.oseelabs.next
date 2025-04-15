@@ -3,8 +3,8 @@
  * This allows creating a streaming Resonse for async generators.
  */
 export class StreamingResponse extends Response {
-
-    constructor( res: ReadableStream, init?: ResponseInit ) {
+    // @typescript-eslint/explicit-any
+    constructor( res: ReadableStream<any>, init?: ResponseInit ) {
         super(res, {
             ...init,
             status: 200,
