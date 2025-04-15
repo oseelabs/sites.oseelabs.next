@@ -4,8 +4,8 @@
  */
 export class StreamingResponse extends Response {
 
-    constructor( res: ReadableStream<any>, init?: ResponseInit ) {
-        super(res as any, {
+    constructor( res: ReadableStream<unknown>, init?: ResponseInit ) {
+        super(res, {
             ...init,
             status: 200,
             headers: {
