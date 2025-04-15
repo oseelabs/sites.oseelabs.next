@@ -8,3 +8,9 @@ export const chat = async ({ message, chatHistory }: ChatProps) => {
 
     return await chat.sendMessage(message);
 };
+
+export const chatStream = async ({ message, chatHistory }: ChatProps) => {
+    const chat = gemini.startChat({ history: chatHistory });
+
+    return await chat.sendMessageStream(message);
+};
