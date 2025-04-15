@@ -4,7 +4,7 @@
  */
 export class StreamingResponse extends Response {
 
-    constructor( res: ReadableStream<unknown>, init?: ResponseInit ) {
+    constructor( res: ReadableStream, init?: ResponseInit ) {
         super(res, {
             ...init,
             status: 200,
